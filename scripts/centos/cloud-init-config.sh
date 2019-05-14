@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
 
-yum install -y cloud-init
+set -e
+
+yum install -y python-pip
+
+# config pip
+mkdir ~/.pip/
+cat <<EOF > ~/.pip/pip.conf
+[global]
+index-url = http://pypi.douban.com/simple
+[install]
+trusted-host = pypi.douban.com
+EOF
+
+# download cloud-init 18.5
+cd /tmp
+curl -LO https://launchpad.net/cloud-init/trunk/18.5/+download/cloud-init-18.5.tar.gz
+tar -zxvf cloud-init-18.5.tar.gz && cd cloud-init-18.5
+pip install -r ./requirements.txt
+python setup.py build
+python setup.py install --init-system systemd
 
 cat <<EOF >/etc/cloud/cloud.cfg
 users:
@@ -8,6 +27,7 @@ users:
 
 disable_root: 0
 ssh_pwauth:   1
+chpasswd: {expire: False}
 
 mount_default_fields: [~, ~, 'auto', 'defaults,nofail,x-systemd.requires=cloud-init.service', '0', '2']
 resize_rootfs_tmp: /dev
@@ -71,6 +91,13 @@ system_info:
   ssh_svcname: sshd
 
 # vim:syntax=yaml
+EOF
+
+cat <<EOF >/etc/cloud/cloud.cfg.d/99-ec2-datasource.cfg
+#cloud-config
+datasource:
+  Ec2:
+    strict_id: false
 EOF
 
 systemctl enable cloud-init

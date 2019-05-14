@@ -8,7 +8,10 @@ yum -y clean all
 find /var/log -type f | while read f; do echo -ne '' > $f; done;
 
 # remove under tmp directory
-rm -rf /tmp/*
+rm -rf /tmp/* /var/tmp/*
 
-#dd if=/dev/zero of=/EMPTY bs=1M
-#rm -rf /EMPTY
+# remove ssh keypair
+rm -f /etc/ssh/*_key /etc/ssh/*_key.pub
+
+# zero log files
+find /var/log -type f | while read f; do echo -ne '' > $f; done;

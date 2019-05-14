@@ -1,0 +1,74 @@
+#! /bin/sh
+#
+# yunion      Start up yunion clouds
+#
+# chkconfig: 2345 90 10
+# description: Yunion cloud software suite
+#
+
+### BEGIN INIT INFO
+# Provides:          yunion
+# Required-Start:    $remote_fs $network $syslog sshd
+# Required-Stop:     $remote_fs $syslog
+# Should-Start:      mysqld
+# Should-Stop:       $network mysqld
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Yunion clouds
+# Description:       Yunion clouds
+### END INIT INFO
+
+# Author: Jian Qiu <qiujian@yunionyun.com>
+#
+
+# Do NOT "set -e"
+
+function loaded() {
+    systemctl status ${1}.service | grep Loaded | awk '{print $2}'
+}
+
+function do_start() {
+  if [ -d /opt/yunionsetup ] && [ -e /opt/yunionsetup/vars ] && [ ! -e /etc/yunion/region.conf ] && [ ! -e /etc/yunion/host.conf ]; then
+    REGION_LOADED=$(loaded yunion-region)
+    if [ "$REGION_LOADED" == "loaded" ]; then
+        exit 0
+    fi
+    runuser -u yunion /opt/yunion/setupctrler.sh
+    exit 0
+  fi
+
+  HOST_LOADED=$(loaded yunion-host)
+
+  if [ "$HOST_LOADED" == "loaded" ]; then
+    exit 0
+  fi
+
+  if [ -e /etc/sysconfig/yunionauth ] && [ ! -e /etc/yunion/region.conf ] && [ ! -e /etc/yunion/host.conf ]; then
+
+    . /etc/sysconfig/yunionauth
+
+    if [ "$YUNION_START" == "yes" ]; then
+      runuser -u yunion /opt/yunion/setuphost.sh
+      exit 0
+      # . /opt/yunion/genhostconf.sh
+      # if [ "$YUNION_KUBELET_ENABLE" == "yes" ]; then
+      #     . /opt/yunion/config_kubernetes_node.sh
+      # fi
+    fi
+
+  fi
+}
+
+case "$1" in
+  start)
+    do_start
+    ;;
+  stop)
+    ;;
+  *)
+    echo "Usage: $SCRIPTNAME {start|stop}" >&2
+    exit 3
+    ;;
+esac
+
+exit 0

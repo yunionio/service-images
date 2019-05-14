@@ -7,7 +7,7 @@
         ["-smp", "cpus=1,maxcpus=16,cores=4"]
         ],
         "disk_interface": "virtio",
-        "disk_compression": true,
+        "disk_compression": false,
         "disk_size": 30720,
         "format": "qcow2",
         "net_device": "virtio-net",
@@ -17,12 +17,15 @@
         "iso_checksum_type": "sha256",
 
         "vm_name": "k8s-centos7-base",
-        "output_directory": "./_output/",
+        "output_directory": "./_output/k8s",
 
         "http_directory": "./kubernetes/http/",
         "ssh_username": "root",
         "ssh_password": "123@yunion",
         "ssh_timeout": "30m",
+
+	"headless": true,
+	"vnc_bind_address": "0.0.0.0",
 
         "boot_wait": "5s",
         "boot_command": [
@@ -34,8 +37,11 @@
     "provisioners": [{
         "type": "shell",
         "scripts": [
-            "scripts/cloud-init-config.sh",
-            "scripts/cleanup.sh"
+            "scripts/k8s/install-docker.sh",
+            "scripts/k8s/install-kubeadm.sh",
+            "scripts/k8s/k8s-config.sh",
+            "scripts/centos/cloud-init-config.sh",
+            "scripts/centos/cleanup.sh"
         ]
     }]
 }
