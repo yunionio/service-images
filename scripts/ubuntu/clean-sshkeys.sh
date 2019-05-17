@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -f /etc/ssh/*_key /etc/ssh/*_key.pub
+rm -vf /etc/ssh/ssh_host_*
 
 ssh_initkey="/etc/init.d/ssh-initkey"
 cat <<EOF >$ssh_initkey

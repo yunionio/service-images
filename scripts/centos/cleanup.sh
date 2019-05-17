@@ -11,7 +11,7 @@ find /var/log -type f | while read f; do echo -ne '' > $f; done;
 rm -rf /tmp/* /var/tmp/*
 
 # remove ssh keypair
-rm -f /etc/ssh/*_key /etc/ssh/*_key.pub
+rm -vf /etc/ssh/ssh_host_*
 
 # zero log files
 find /var/log -type f | while read f; do echo -ne '' > $f; done;
