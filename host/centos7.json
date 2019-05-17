@@ -1,0 +1,91 @@
+{
+    "builders": [{
+        "type": "qemu",
+        "accelerator": "kvm",
+        "qemuargs": [
+        ["-m", "2048M"],
+        ["-smp", "cpus=1,maxcpus=16,cores=4"]
+        ],
+        "disk_interface": "virtio",
+        "disk_compression": false,
+        "disk_size": 30720,
+        "format": "qcow2",
+        "net_device": "virtio-net",
+
+        "iso_url": "https://mirrors.aliyun.com/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso",
+        "iso_checksum": "38d5d51d9d100fd73df031ffd6bd8b1297ce24660dc8c13a3b8b4534a4bd291c",
+        "iso_checksum_type": "sha256",
+
+        "vm_name": "host-centos7-base",
+        "output_directory": "./_output/host",
+
+	"headless": true,
+	"vnc_bind_address": "0.0.0.0",
+
+        "http_directory": "./host/http/",
+        "ssh_username": "root",
+        "ssh_password": "123@yunion",
+        "ssh_timeout": "30m",
+
+        "boot_wait": "5s",
+        "boot_command": [
+            "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos7-ks.cfg<enter><wait>"
+        ],
+
+        "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }],
+    "provisioners": [
+    {
+	"type": "shell-local",
+	"command": "echo start local config"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/default/grub",
+	"source": "./scripts/host/os-init/rootfs/etc/default/grub"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/init.d/yunion",
+	"source": "./scripts/host/os-init/rootfs/etc/init.d/yunion"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/sysctl.d/",
+	"source": "./scripts/host/os-init/rootfs/etc/sysctl.d/nonlocal_bind.conf"
+    },
+    {
+	"type": "file",
+	"destination": "/opt",
+	"source": "./scripts/host/os-init/rootfs/opt/yunion"
+    },
+    {
+	"type": "file",
+	"destination": "/opt",
+	"source": "./contrib/yunionsetup"
+    },
+    {
+	"type": "file",
+	"destination": "/opt",
+	"source": "./contrib/cloud"
+    },
+    {
+	"type": "file",
+	"destination": "/opt/yunion/upgrade",
+	"source": "./contrib/upgrade"
+    },
+    {
+        "type": "shell",
+        "scripts": [
+            "scripts/centos/grub-config.sh",
+            "scripts/k8s/install-docker.sh",
+            "scripts/k8s/install-kubeadm.sh",
+            "scripts/host/install-packages.sh",
+	    "scripts/host/autoupdate-config.sh",
+	    "scripts/host/gpu-setup.sh",
+	    "scripts/host/post-config.sh",
+            "scripts/centos/cleanup.sh"
+        ]
+    }
+    ]
+}

@@ -1,2 +1,5 @@
 packer_cache
 _output
+_cache
+contrib/*
+*.iso
