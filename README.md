@@ -22,9 +22,9 @@ $ mv ./packer /usr/bin
 
 ```bash
 # centos
-$ yum install -y qemu zerofree
+$ yum install -y qemu zerofree seabios seabios-bin
 # archlinux
-$ pacman -S qemu zerofree
+$ pacman -S qemu zerofree seabios
 ```
 
 ## Usage
