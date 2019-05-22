@@ -38,6 +38,7 @@ pkgs_host=(
     fuse-libs
     gdisk
     gettext
+    libaio
     host-image
     jq
     kapacitor
