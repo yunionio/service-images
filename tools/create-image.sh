@@ -42,7 +42,8 @@ function img_create() {
     local img=$1
     local nbd_dev=$2
     nbd_connect $nbd_dev $img
-    local parts=$(find /dev | grep "${nbd_dev}p")
+    local parts=$(find /dev | grep "${nbd_dev}p.")
+    echo "Found disk partitions: $parts"
     for p in $parts; do
         zerofree_dev $p
     done
