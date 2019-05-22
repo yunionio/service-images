@@ -72,8 +72,15 @@ function prepare_env() {
 
     # sync file to /opt/yunion/upgrade
     local upgrade_dir=$CONTRIB_DIR/upgrade
+    rm -rf $upgrade_dir
     mkdir -p $upgrade_dir
     rsync -avP $ISO_MNT_POINT/{upgrade.sh,downloader.sh,version*} $upgrade_dir
+
+    # sync upgrade rpms
+    local repo=$CONTRIB_DIR/repo
+    rm -rf $repo
+    mkdir -p $repo
+    rsync -avP $ISO_MNT_POINT/rpms/updates/{yunion-sdnagent*,yunion-kube-agent*,yunion-autoupdate*,yunion-host*} $repo
 
     sudo umount $ISO_MNT_POINT
 }
