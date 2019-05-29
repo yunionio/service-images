@@ -9,3 +9,7 @@ apt-get install -y nvidia-390
 
 # Prevent minor version upgrades.
 apt-mark hold nvidia-390
+
+sudo service lightdm stop
+
+sudo systemctl set-default multi-user.target

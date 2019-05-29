@@ -9,6 +9,9 @@ k8s:
 gpu-ubu1804:
 	./tools/build-image.sh ./gpu/ubuntu-1804.json
 
+gpu-ubu1604:
+	./tools/build-image.sh ./gpu/ubuntu-1604.json
+
 host:
 ifdef ISO_VERSION
 	@echo "Build host template $(ISO_VERSION)"
