@@ -12,5 +12,5 @@ repo_gpgcheck=0
 gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
-yum install --assumeyes bridge-utils conntrack-tools jq kubelet kubeadm kubectl
+yum install --assumeyes bridge-utils conntrack-tools jq kubelet-1.14.1-0 kubeadm kubectl
 
