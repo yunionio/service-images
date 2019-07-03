@@ -82,6 +82,7 @@
     {
         "type": "shell",
         "scripts": [
+            "scripts/centos/dracut-config.sh",
             "scripts/centos/grub-config.sh",
             "scripts/k8s/install-docker.sh",
             "scripts/k8s/install-kubeadm.sh",
