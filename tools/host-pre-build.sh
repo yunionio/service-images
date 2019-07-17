@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 SRC_ROOT=$(readlink -f $(dirname "${BASH_SOURCE[0]}")/..)
-ISO_SERVER="https://iso.yunion.cn/"
+ISO_SERVER="https://iso.yunion.cn/beta"
 CACHE_DIR="$SRC_ROOT/_cache"
 ISO_MNT_POINT="/mnt"
 CONTRIB_DIR="$SRC_ROOT/contrib"
