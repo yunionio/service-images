@@ -37,12 +37,6 @@ function do_start() {
     exit 0
   fi
 
-  HOST_LOADED=$(loaded yunion-host)
-
-  if [ "$HOST_LOADED" == "loaded" ]; then
-    exit 0
-  fi
-
   if [ -e /etc/sysconfig/yunionauth ] && [ ! -e /etc/yunion/region.conf ] && [ ! -e /etc/yunion/host.conf ]; then
 
     . /etc/sysconfig/yunionauth
