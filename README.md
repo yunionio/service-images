@@ -7,6 +7,7 @@ The following software must be installed/present on your local machine before yo
   - [packer](https://www.packer.io/intro/getting-started/install.html)
   - [qemu](https://www.qemu.org/download/)
   - [zerofree](https://frippery.org/uml/)
+  - nbd: kernel nbd module
 
 ### Install dependencies
 
@@ -53,8 +54,10 @@ drwxr-xr-x 3 lzx lzx   18 May 15 22:36 ..
 ### Zerofree and compress image
 
 ```bash
+# probe nbd module
+$ sudo modprobe nbd
 # do zerofree and compress to shrink image size
-$ ./tools/create-image.sh ./_output/host/host-centos7-base
+$ ./tools/create-image.sh ./_output/host/host-centos7-base /dev/nbd11
 $ ls -alh ./_output/host
 total 3.8G
 drwxr-xr-x 2 lzx lzx   62 May 15 22:55 .

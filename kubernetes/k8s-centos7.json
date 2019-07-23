@@ -42,7 +42,8 @@
             "scripts/k8s/install-kubeadm.sh",
             "scripts/k8s/k8s-config.sh",
             "scripts/centos/cloud-init-config.sh",
-            "scripts/centos/cleanup.sh"
+            "scripts/centos/cleanup.sh",
+            "scripts/common/sync.sh"
         ]
     }]
 }

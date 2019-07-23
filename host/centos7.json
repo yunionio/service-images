@@ -89,7 +89,8 @@
             "scripts/host/install-packages.sh",
 	    "scripts/host/gpu-setup.sh",
 	    "scripts/host/post-config.sh",
-            "scripts/centos/cleanup.sh"
+            "scripts/centos/cleanup.sh",
+            "scripts/common/sync.sh"
         ]
     }
     ]
