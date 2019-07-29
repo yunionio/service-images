@@ -59,4 +59,4 @@ cd /opt/yunionsetup
 ./setup.sh
 
 UPGRADE_DIR=/opt/yunion/upgrade
-./scripts/all_setup.sh
+sudo ./scripts/all_setup.sh
