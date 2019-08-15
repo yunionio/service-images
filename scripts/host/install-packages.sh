@@ -78,5 +78,5 @@ yum install -y \
     kernel-3.10.0-862.14.4.el7.yn20190116 \
     kernel-devel-3.10.0-862.14.4.el7.yn20190116 \
     kernel-headers-3.10.0-862.14.4.el7.yn20190116 \
-    kmod-openvswitch-2.9.3-1.el7 \
-    openvswitch-2.9.3-1
+    kmod-openvswitch \
+    openvswitch

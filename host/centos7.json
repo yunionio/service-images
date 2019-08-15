@@ -6,7 +6,8 @@
         ["-m", "2048M"],
         ["-smp", "cpus=1,maxcpus=16,cores=4"]
         ],
-        "disk_interface": "virtio",
+        "disk_interface": "virtio-scsi",
+	"machine_type": "q35",
         "disk_compression": false,
         "disk_size": 30720,
         "format": "qcow2",
@@ -87,7 +88,6 @@
             "scripts/k8s/install-docker.sh",
             "scripts/k8s/install-kubeadm.sh",
             "scripts/host/install-packages.sh",
-	    "scripts/host/gpu-setup.sh",
 	    "scripts/host/post-config.sh",
             "scripts/centos/cleanup.sh",
             "scripts/common/sync.sh"
