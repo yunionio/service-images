@@ -74,7 +74,7 @@ function prepare_env() {
     local upgrade_dir=$CONTRIB_DIR/upgrade
     rm -rf $upgrade_dir
     mkdir -p $upgrade_dir
-    rsync -avP $ISO_MNT_POINT/{upgrade.sh,downloader.sh,version*} $upgrade_dir
+    rsync -avP $ISO_MNT_POINT/{upgrade.sh,downloader.sh,gpu_init,version*} $upgrade_dir
 
     # sync upgrade rpms
     local repo=$CONTRIB_DIR/repo

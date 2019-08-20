@@ -3,4 +3,4 @@
 set -x
 set -e
 
-/opt/yunionsetup/scripts/gpu_setup.sh
+/opt/yunion/upgrade/gpu_init/gpu_sutup.sh
