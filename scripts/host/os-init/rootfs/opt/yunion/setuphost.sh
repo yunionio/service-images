@@ -60,3 +60,5 @@ cd /opt/yunionsetup
 
 UPGRADE_DIR=/opt/yunion/upgrade
 sudo ./scripts/all_setup.sh
+
+sudo chown -R yunion:yunion /opt/yunion/upgrade /opt/yunionsetup /etc/yunion
