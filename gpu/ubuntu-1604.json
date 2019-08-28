@@ -18,7 +18,7 @@
         "iso_checksum_type": "none",
 
         "vm_name": "gpu-ubuntu1604-base",
-        "output_directory": "./_output/gpu",
+        "output_directory": "./_output/gpu-ubuntu1604",
 
 	"headless": true,
 	"vnc_bind_address": "0.0.0.0",

@@ -12,6 +12,9 @@ gpu-ubu1804:
 gpu-ubu1604:
 	./tools/build-image.sh ./gpu/ubuntu-1604.json
 
+gpu-centos7:
+	./tools/build-image.sh ./gpu/centos-7.json
+
 host:
 ifdef ISO_VERSION
 	@echo "Build host template $(ISO_VERSION)"
