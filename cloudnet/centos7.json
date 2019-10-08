@@ -1,0 +1,51 @@
+{
+    "builders": [{
+        "type": "qemu",
+        "accelerator": "kvm",
+        "qemuargs": [
+        ["-m", "2048M"],
+        ["-smp", "cpus=1,maxcpus=16,cores=4"]
+        ],
+        "disk_interface": "virtio",
+        "disk_compression": false,
+        "disk_size": 10240,
+        "format": "qcow2",
+        "net_device": "virtio-net",
+
+        "iso_url": "http://ftp.sjtu.edu.cn/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso",
+        "iso_checksum": "6ffa7ad44e8716e4cd6a5c3a85ba5675a935fc0448c260f43b12311356ba85ad",
+        "iso_checksum_type": "sha256",
+
+        "vm_name": "cloudnet-centos7-base",
+        "output_directory": "./_output/cloudnet",
+
+        "http_directory": "./cloudnet/http/",
+        "ssh_username": "root",
+        "ssh_password": "123@yunion",
+        "ssh_timeout": "1h",
+
+	"headless": true,
+	"vnc_bind_address": "0.0.0.0",
+
+        "boot_wait": "5s",
+        "boot_command": [
+            "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos7-ks.cfg<enter><wait>"
+        ],
+
+        "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "scripts": [
+            "scripts/cloudnet/sshd-usedns-no.sh",
+            "scripts/cloudnet/install-wireguard.sh",
+            "scripts/cloudnet/remove-networkmanager.sh",
+            "scripts/cloudnet/remove-oldkernels.sh",
+            "scripts/cloudnet/remove-leaves.sh",
+            "scripts/centos/dracut-config.sh",
+            "scripts/centos/cloud-init-config.sh",
+            "scripts/centos/cleanup.sh",
+            "scripts/common/sync.sh"
+        ]
+    }]
+}

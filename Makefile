@@ -15,6 +15,9 @@ gpu-ubu1604:
 gpu-centos7:
 	./tools/build-image.sh ./gpu/centos-7.json
 
+cloudnet:
+	./tools/build-image.sh ./cloudnet/centos-7.json
+
 host:
 ifdef ISO_VERSION
 	@echo "Build host template $(ISO_VERSION)"
