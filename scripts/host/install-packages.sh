@@ -75,8 +75,8 @@ yun::yum::repoinstall "${pkgs_host[@]}"
 yun::yum::repoinstall "${pkgs_baremetal[@]}"
 
 yum install -y \
-    kernel-3.10.0-862.14.4.el7.yn20190712 \
-    kernel-devel-3.10.0-862.14.4.el7.yn20190712 \
-    kernel-headers-3.10.0-862.14.4.el7.yn20190712 \
+    kernel-3.10.0-1062.4.3.el7.yn20191203 \
+    kernel-devel-3.10.0-1062.4.3.el7.yn20191203 \
+    kernel-headers-3.10.0-1062.4.3.el7.yn20191203 \
     kmod-openvswitch \
     openvswitch
