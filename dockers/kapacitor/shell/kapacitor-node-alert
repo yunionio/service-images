@@ -1,0 +1,134 @@
+#!/bin/bash
+
+set -e
+
+# Stdin args
+input=$(jq '.')
+origin_time=`echo $input|jq -r '.time'`
+epoch="$(date -d "${origin_time}" +"%s")"
+time="$(date -d @$epoch '+%Y-%m-%d %H:%M:%S')"
+kapacitor_level=`echo $input|jq -r '.level'`
+details=`echo $input|jq -r '.message'`
+comparator_str=`echo $details|jq -r '.comparator'`
+metric_str=`echo $details|jq -r '.metric'`
+channel=`echo $details|jq -r '.channel'`
+threshold=`echo $details|jq -r '.threshold'`
+recipients=`echo $details|jq -r '.recipients'`
+type_str=`echo $details|jq -r '.type'`
+level_str=`echo $details|jq -r '.level'`
+node_name=`echo $details|jq -r '.node_name'`
+node_id=`echo $details|jq -r '.node_id'`
+ips=`echo $details|jq -r '.ips'`
+eip=`echo $details|jq -r '.eip'`
+current=`echo $input|jq -r '.data.series[0].values[0][1]'`
+current_val=`echo $current | awk '{printf ("%.2f\n", $current)}'`
+
+
+function buildEmailMessage()
+{
+    message="
+        <b>时间</b>：$time<br>
+        <b>机器</b>：$node_name($node_id)<br>
+        <b>内网IP</b>：$ips<br>
+        <b>弹性公网IP</b>：$eip<br>
+        <b>报警项</b>：$metric$comparator$threshold$unit（$metric_str $comparator_str $threshold$unit）<br>
+        <b>当前值</b>：$current$unit<br>
+        <b>报警级别</b>：$level<br>"
+}
+
+
+# comparator to Chinese
+if [ "$comparator_str"x == ">"x ]; then
+    comparator="高于"
+elif [ "$comparator_str"x == ">="x ]; then
+    comparator="高于或等于"
+elif [ "$comparator_str"x == "&lt;"x ]; then
+    comparator="低于"
+elif [ "$comparator_str"x == "&lt;="x ]; then
+    comparator="低于或等于"
+elif [ "$comparator_str"x == "="x ]; then
+    comparator="等于"
+elif [ "$comparator_str"x == "=="x ]; then
+    comparator="等于"
+elif [ "$comparator_str"x == "!="x ]; then
+    comparator="不等于"
+else
+    comparator=$comparator_str
+fi
+
+
+# metric to Chinese
+if [ "$metric_str"x == "vm_cpu.usage_active"x ]; then
+    metric="CPU使用率"
+    unit="%"
+elif [ "$metric_str"x == "vm_mem.used_percent"x ]; then
+    metric="内存使用率"
+    unit="%"
+elif [ "$metric_str"x == "vm_diskio.read_bps"x ]; then
+    metric="磁盘读速率"
+    unit="bps"
+elif [ "$metric_str"x == "vm_diskio.write_bps"x ]; then
+    metric="磁盘写速率"
+    unit="bps"
+elif [ "$metric_str"x == "vm_netio.bps_recv"x ]; then
+    metric="网络入流量"
+    unit="bps"
+elif [ "$metric_str"x == "vm_netio.bps_sent"x ]; then
+    metric="网络出流量"
+    unit="bps"
+else
+    metric=$metric_str
+    unit=""
+fi
+
+
+# level to Chinese
+if [ "$level_str"x == "important"x ]; then
+    level="重要"
+elif [ "$level_str"x == "fatal"x ]; then
+    level="致命"
+elif [ "$level_str"x == "normal"x ]; then
+    level="普通"
+else
+    level=$level_str
+fi
+
+
+
+# node_type to Chinese
+if [ "$type_str"x == "host"x ]; then
+    node_type="宿主机"
+elif [ "$type_str"x == "guest"x ]; then
+    node_type="虚拟机"
+else
+    node_type="机器"
+fi
+
+
+# ---- main ----
+if [ "$kapacitor_level"x == "OK"x ]; then
+    topic="[$level]$node_type$node_name的$metric告警已恢复"
+else
+    topic="[$level]$node_type$node_name发生$metric告警"
+fi
+
+case "$channel" in
+    "email")
+        buildEmailMessage
+        ;;
+    "mobile")
+        echo "not support yet."
+        exit 1
+        ;;
+    *)
+        echo "not support yet."
+        exit 1
+        ;;
+esac
+
+IFS=',' read -ra recipient  <<< "$recipients"
+for i in "${recipient[@]}"; do
+    # Send notify
+    /opt/yunion/bin/climc notify "$i" "$channel" "$topic" "$level_str" "$message"  2>&1
+done
+# ---- /main ---

@@ -1,0 +1,46 @@
+dbrp "telegraf"."30day_only"
+
+var period = 300s
+var every = 300s
+
+// 宿主机
+stream
+    |from()
+        .measurement('cpu')
+        .groupBy(['host', 'host_ip'])
+        .where(lambda: TRUE)
+    |window()
+        .period(period)
+        .every(every)
+    |eval(lambda: "usage_active")
+        .as('value')
+    |alert()
+        .crit(lambda: "value" > 0)
+        .message('{{ index .Tags "host_ip"}}/{{ index .Tags "host"}}')
+        .id('node-discovery-host')
+        .idTag('alertID')
+        .levelTag('level')
+        .messageField('message')
+        .durationField('duration')
+        .exec('/opt/yunion/bin/kapacitor-node-create', 'host')
+
+// 虚拟机
+stream
+    |from()
+        .measurement('vm_cpu')
+        .groupBy(['vm_ip', 'vm_name'])
+        .where(lambda: TRUE)
+    |window()
+        .period(period)
+        .every(every)
+    |eval(lambda: "usage_active")
+        .as('value')
+    |alert()
+        .crit(lambda: "value" > 0)
+        .message('{{ index .Tags "vm_ip"}}/{{ index .Tags "vm_name"}}')
+        .id('node-discovery-guest')
+        .idTag('alertID')
+        .levelTag('level')
+        .messageField('message')
+        .durationField('duration')
+        .exec('/opt/yunion/bin/kapacitor-node-create', 'guest')

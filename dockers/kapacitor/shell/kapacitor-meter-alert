@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -e
+
+# Exec args
+uid="$1"
+channel="$2"
+priority="$3"
+provider="$4"
+accountId="$5"
+type="$6"
+metric="$7"
+comparator="$8"
+threshold="$9"
+
+# Stdin args
+input=$(jq '.')
+origin_time=`echo $input|jq -r '.time'`
+epoch="$(date -d "${origin_time}" +"%s")"
+time="$(date -d @$epoch '+%Y-%m-%d %H:%M:%S')"
+level=`echo $input|jq -r '.level'`
+topic=`echo $input|jq -r '.message'`
+details=`echo $input|jq -r '.details'`
+link="$(cut -d'@' -f1 <<<"$details")"
+value="$(cut -d'@' -f2 <<<"$details")"
+account="$(cut -d'@' -f3 <<<"$details")"
+restored="报警恢复<br>"
+
+function buildEmailMessage()
+{
+    if [ "$metric"x == "balance"x ]; then
+        aggregate_type="余额"
+    elif [ "$metric"x == "resFee"x ]; then
+        aggregate_type="今日消费"
+    else
+        aggregate_type="本月消费"
+    fi
+
+    rule="$comparator您设置的$aggregate_type预警阈值$threshold"
+
+    if [ "$type"x == "overview"x ]; then
+        subject="OneCloud云管平台"
+    else
+        subject="您的$provider云账号$account"
+    fi
+
+    message="尊敬的用户，截止$time，$subject$aggregate_type为$value元，$rule，请及时关注。<br>$link<hr>"
+}
+
+
+# ---- main ----
+if [ "$level"x == "OK"x ]; then
+    message=$restored"当前值："$value
+else
+    case "$channel" in
+        "email")
+            buildEmailMessage
+            ;;
+        "mobile")
+            echo "not support yet."
+            exit 1
+            ;;
+        *)
+            echo "not support yet."
+            exit 1
+            ;;
+    esac
+fi
+# ---- /main ---
+
+topic="[$priority]$topic"
+
+# Send notify
+/opt/yunion/bin/climc notify "$uid" "$channel" "$topic" "$priority" "$message"  2>&1

@@ -1,0 +1,124 @@
+#!/bin/bash
+
+set -e
+
+# Exec args
+uid="$1"
+channel="$2"
+template="$3"
+priority="$4"
+host="$5"
+metric_name="$6"
+metric_fields="$7"
+duration="${8}"
+rule_left="$9"
+
+# Stdin args
+input=$(jq '.')
+origin_time=`echo $input|jq -r '.time'`
+epoch="$(date -d "${origin_time}" +"%s")"
+time="$(date -d @$epoch '+%Y-%m-%d %H:%M:%S')"
+type=`echo $input|jq -r '.level'`
+topic=`echo $input|jq -r '.message'`
+details=`echo $input|jq -r '.details'`
+link="$(cut -d'@' -f1 <<<"$details")"
+value="$(cut -d'@' -f2 <<<"$details")"
+restored="报警恢复<br>"
+
+
+# Mobile SMS Template
+MOBILE_TEMPLATE='{"template": "#template", "properties": #properties}'
+
+MOBILE_TEMPLATE_1_CODE="SMS_126462297"
+MOBILE_TEMPLATE_2_CODE="SMS_126357461"
+MOBILE_TEMPLATE_3_CODE="SMS_126462300"
+
+MOBILE_TEMPLATE_1_PROPERTIES='{"type": "#type", "host": "#host", "duration": "#duration", "metric_name": "#metric_name", "metric_fields": "#metric_fields", "rule_left": "#rule_left", "value": "#value", "time": "#time"}'
+MOBILE_TEMPLATE_2_PROPERTIES='{"type": "#type", "host": "#host", "n": "#n", "m": "#m", "metric_name": "#metric_name", "metric_fields": "#metric_fields", "rule_left": "#rule_left", "value": "#value", "time": "#time"}'
+MOBILE_TEMPLATE_3_PROPERTIES='{"type": "#type", "host": "#host", "duration": "#duration", "metric_name": "#metric_name", "metric_fields": "#metric_fields", "time": "#time"}'
+
+
+# Email Tempate
+EMAIL_TEMPLATE_1='类型：#type，机器：#host，规则：#duration分钟内，#metric_name指标#metric_fields的#rule_left，当前值：#value，时间：#time'
+EMAIL_TEMPLATE_2='类型：#type，机器：#host，规则：#n次内，有#m次#metric_name指标#metric_fields是#rule_left，当前值：#value，时间：#time'
+EMAIL_TEMPLATE_3='类型：#type，机器：#host，规则：超过#duration分钟，没有收到#metric_name指标#metric_fields的上报数据，时间：#time'
+
+
+
+function buildThresholdTemplate()
+{
+    duration_min=`expr $duration / 60`
+
+    if [ "$channel"x == "email"x ]; then
+        message=$(echo "$EMAIL_TEMPLATE_1" \
+            | sed "s/#type/$type/" \
+            | sed "s/#host/$host/" \
+            | sed "s/#duration/$duration_min/" \
+            | sed "s/#metric_name/$metric_name/" \
+            | sed "s/#metric_fields/$metric_fields/" \
+            | sed "s/#rule_left/$rule_left/" \
+            | sed "s/#value/$value/" \
+            | sed "s/#time/$time/" )
+	    message=$message$link
+    elif [ "$channel"x == "mobile"x ]; then
+        mobile_properties=$(echo "$MOBILE_TEMPLATE_1_PROPERTIES" \
+        | sed "s/#type/$type/" \
+        | sed "s/#host/$host/" \
+        | sed "s/#duration/$duration/" \
+        | sed "s/#metric_name/$metric_name/" \
+        | sed "s/#metric_fields/$metric_fields/" \
+        | sed "s/#rule_left/$rule_left/" \
+        | sed "s/#value/$value/" \
+        | sed "s/#time/$time/" )
+        message=$(echo "$MOBILE_TEMPLATE"  | sed "s/#template/$MOBILE_TEMPLATE_1_CODE/" | sed "s/#properties/$mobile_properties/")
+    fi
+}
+
+function buildDeadmanTemplate()
+{
+    if [ "$channel"x == "email"x ]; then
+        message=$(echo "$EMAIL_TEMPLATE_3" \
+            | sed "s/#type/$type/" \
+            | sed "s/#host/$host/" \
+            | sed "s/#duration/$duration/" \
+            | sed "s/#metric_name/$metric_name/" \
+            | sed "s/#metric_fields/$metric_fields/" \
+            | sed "s/#time/$time/" \
+            )
+	    message=$message$link
+    elif [ "$channel"x == "mobile"x ]; then
+        mobile_properties=$(echo "$MOBILE_TEMPLATE_3_PROPERTIES" \
+            | sed "s/#type/$type/" \
+            | sed "s/#host/$host/" \
+            | sed "s/#duration/$duration/" \
+            | sed "s/#metric_name/$metric_name/" \
+            | sed "s/#metric_fields/$metric_fields/" \
+            | sed "s/#time/$time/" \
+            )
+        message=$(echo "$MOBILE_TEMPLATE"  | sed "s/#template/$MOBILE_TEMPLATE_3_CODE/" | sed "s/#properties/$mobile_properties/")
+    fi
+}
+
+
+# ---- main ----
+if [ "$type"x == "OK"x ]; then
+    message=$restored"当前值："$value
+else
+    case "$template" in
+        "1")
+            buildThresholdTemplate
+            ;;
+        "3")
+            buildDeadmanTemplate
+            ;;
+        *)
+            echo "not support yet."
+            exit 1
+            ;;
+    esac
+fi
+# ---- /main ----
+
+
+# Send notify
+/opt/yunion/bin/climc notify "$uid" "$channel" "$topic" "$priority" "$message"  2>&1

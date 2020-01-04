@@ -7,4 +7,5 @@ contrib/*
 
 dockers/web-base/opt
 dockers/web-base/dist
+dockers/kapacitor/climc
 *.rpm

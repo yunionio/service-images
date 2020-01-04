@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+tags=$(jq '.data.series[]|.tags')
+res_type="$1"
+
+if [ "$res_type"x == "host"x ]; then
+    ip=`echo $tags|jq -r '.host_ip'`
+    name=`echo $tags|jq -r '.host'`
+elif [ "$res_type"x == "guest"x ]; then
+    ip=`echo $tags|jq -r '.vm_ip'`
+    name=`echo $tags|jq -r '.vm_name'`
+fi
+
+if [ -z "$name" ]; then
+    echo "Name is NULL"
+    exit 1
+else
+    /opt/yunion/bin/climc node-create --res-type $res_type $name $ip 2>&1
+fi
