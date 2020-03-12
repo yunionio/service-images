@@ -1,0 +1,14 @@
+{
+  "bridge": "none",
+  "iptables": false,
+  "exec-opts": [
+      "native.cgroupdriver=systemd"
+   ],
+  "data-root": "/opt/docker",
+  "log-driver": "json-file",
+  "log-opts": {
+      "max-size": "100m"
+   },
+  "registry-mirrors": ["https://lje6zxpk.mirror.aliyuncs.com"],
+  "live-restore": true
+}

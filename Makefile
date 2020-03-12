@@ -27,6 +27,9 @@ else
 	@echo "ISO_VERSION not define"
 endif
 
+hostv3:
+	./tools/build-image.sh ./hostv3/centos7.json
+
 clean-cache:
 	-rm -rf $(CACHE_DIR)
 
@@ -36,4 +39,4 @@ clean-contrib:
 clean-all: clean-cache clean-contrib
 	-rm -rf $(OUTPUT_DIR)
 
-.PHONY: k8s gpu-ubu1604 host clean-all clean-cache clean-contrib
+.PHONY: k8s gpu-ubu1604 host clean-all clean-cache clean-contrib hostv3
