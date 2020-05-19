@@ -32,6 +32,11 @@ function do_start() {
 
     . /etc/sysconfig/yunionauth
 
+    if [ ! -z "$DOCKER_DAEMON_JSON" ]; then
+        echo "$DOCKER_DAEMON_JSON" | base64 -d > /etc/docker/daemon.json
+        systemctl restart docker
+    fi
+
     if [ "$YUNION_START" == "yes" ]; then
       /opt/yunion/bin/ocadm join $API_SERVER \
           --enable-host-agent \
