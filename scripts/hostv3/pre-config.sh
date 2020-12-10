@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.1/yunion.repo
+yum-config-manager --add-repo https://iso.yunion.cn/yumrepo-3.4/yunion.repo
 systemctl disable firewalld
 systemctl enable ntpd
 echo 'yunion ALL = NOPASSWD: ALL' > /etc/sudoers.d/yunion

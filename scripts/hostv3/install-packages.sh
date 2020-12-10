@@ -17,20 +17,13 @@ pkgs_baremetal=(
 )
 
 pkgs_host=(
-    docker-ce-18.09.1
-    docker-ce-cli-18.09.1
-    containerd.io
-    bridge-utils
-    ipvsadm
-    jq
-    conntrack-tools
-    kubeadm-1.15.8-0
-    kubectl-1.15.8-0
-    kubelet-1.15.8-0
-    yunion-ocadm
-    cri-tools
-    kubernetes-cni
-    fetchclient
+    epel-release
+    libaio
+    libusb
+    lvm2
+    nc
+    ntp
+    yunion-fetcherfs
     fuse
     fuse-devel
     fuse-libs
@@ -40,18 +33,22 @@ pkgs_host=(
     spice-protocol
     sysstat
     tcpdump
-    telegraf
     usbredir
     yunion-qemu-2.12.1
+    yunion-ocadm
     yunion-executor-server
-    gdisk
-    gettext
-    libaio
-    libusb
-    lvm2
-    lz4
-    nc
-    parted
+
+    docker-ce-19.03.9
+    docker-ce-cli-19.03.9
+    containerd.io
+
+    bridge-utils
+    ipvsadm
+    conntrack-tools
+    jq
+    kubelet-1.15.8-0
+    kubectl-1.15.8-0
+    kubeadm-1.15.8-0
 )
 
 yun::yum::repoinstall "${pkgs_host[@]}"

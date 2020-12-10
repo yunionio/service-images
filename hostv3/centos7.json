@@ -13,9 +13,8 @@
         "format": "qcow2",
         "net_device": "virtio-net",
 
-        "iso_url": "https://mirrors.aliyun.com/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso",
-        "iso_checksum": "9a2c47d97b9975452f7d582264e9fc16d108ed8252ac6816239a3b58cef5c53d",
-        "iso_checksum_type": "sha256",
+        "iso_url": "https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
+        "iso_checksum": "07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
 
         "vm_name": "hostv3-centos7-base",
         "output_directory": "./_output/host",
