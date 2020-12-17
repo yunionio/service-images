@@ -1,0 +1,49 @@
+{
+    "builders": [{
+        "type": "qemu",
+        "accelerator": "kvm",
+        "qemuargs": [
+        ["-m", "2048M"],
+        ["-smp", "cpus=1,maxcpus=16,cores=4"],
+	      ["-cpu", "host"],
+	      ["-machine", "accel=kvm"]
+        ],
+        "disk_interface": "virtio",
+        "disk_compression": false,
+        "disk_size": 30720,
+        "format": "qcow2",
+        "net_device": "virtio-net",
+
+        "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.1-live-server-amd64.iso",
+        "iso_checksum": "443511f6bf12402c12503733059269a2e10dec602916c0a75263e5d990f6bb93",
+
+        "vm_name": "generic-ubuntu-2004",
+        "output_directory": "./_output/generic-ubuntu-2004",
+        "headless": false,
+        "vnc_bind_address": "0.0.0.0",
+        "http_directory": "./generic/ubuntu-20.04",
+        "ssh_username": "ubuntu",
+        "ssh_password": "ubuntu",
+        "ssh_timeout": "30m",
+        "ssh_pty": true,
+
+        "boot_wait": "5s",
+        "boot_command": [
+          "<enter><enter><f6><esc><wait> ",
+          "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP  }}:{{ .HTTPPort  }}/",
+          "<enter>"
+        ],
+        "shutdown_command": "echo 'packer' | sudo -S systemctl poweroff"
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "scripts": [
+            "scripts/ubuntu/remove-netplan.sh",
+            "scripts/ubuntu/grub-config.sh",
+            "scripts/ubuntu/clean-sshkeys.sh",
+            "scripts/ubuntu/cleanup.sh",
+            "scripts/common/sync.sh"
+        ]
+    }]
+}
+

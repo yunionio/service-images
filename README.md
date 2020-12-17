@@ -30,40 +30,87 @@ $ pacman -S qemu zerofree seabios
 
 ## Usage
 
-### create k8s template
+### create all kinds of template
 
 ```bash
+# make centos 7 image
+$ make centos7
+
+# make ubuntu 18.04 image
+$ make ubuntu-1804
+
 # make kubernetes base image
 $ make k8s
+
+# make onecloud host image
+$ make hostv3
 ```
 
-### create host template
+### check created images
 
 ```bash
-# MUST define ISO_VERSION
-$ make ISO_VERSION=2.9.20190516.0 host
+$ ls -alh ./_output/**
+./_output/generic-centos-7:
+total 2.2G
+drwxr-xr-x 2 lzx lzx 4.0K Dec 17 21:03 .
+drwxr-xr-x 4 lzx lzx 4.0K Dec 17 21:04 ..
+-rw-r--r-- 1 lzx lzx 2.2G Dec 17 21:03 generic-centos-7
 
-# check template image
-$ ls -alh ./_output/host
-total 2.9G
-drwxr-xr-x 2 lzx lzx   31 May 15 22:53 .
-drwxr-xr-x 3 lzx lzx   18 May 15 22:36 ..
--rw-r--r-- 1 lzx lzx 2.9G May 15 22:53 host-centos7-base
+./_output/generic-ubuntu-1804:
+total 2.2G
+drwxr-xr-x 2 lzx lzx 4.0K Dec 17 22:18 .
+drwxr-xr-x 5 lzx lzx 4.0K Dec 17 22:11 ..
+-rw-r--r-- 1 lzx lzx 2.2G Dec 17 22:18 generic-ubuntu-1804
+
+./_output/host:
+total 3.1G
+drwxr-xr-x 2 lzx lzx  4.0K Dec 10 18:59 .
+drwxr-xr-x 4 lzx lzx  4.0K Dec 17 21:04 ..
+-rw-r--r-- 1 lzx lzx  3.1G Dec 10 18:59 hostv3-centos7-base
 ```
 
 ### Zerofree and compress image
 
+Zerofree and compress step will reduce image size
+
 ```bash
 # probe nbd module
 $ sudo modprobe nbd
+
 # do zerofree and compress to shrink image size
-$ ./tools/create-image.sh ./_output/host/host-centos7-base /dev/nbd11
+## for generic-centos-7
+$ ./tools/create-image.sh ./_output/generic-centos-7/generic-centos-7 /dev/nbd10
+$ ls -alh _output/generic-centos-7/
+total 2.9G
+drwxr-xr-x 2 lzx lzx 4.0K Dec 17 21:09 .
+drwxr-xr-x 4 lzx lzx 4.0K Dec 17 21:04 ..
+-rw-r--r-- 1 lzx lzx 2.2G Dec 17 21:09 generic-centos-7
+-rw-r--r-- 1 lzx lzx 702M Dec 17 21:10 generic-centos-7.qcow2
+
+## for generic-ubuntu-1804
+$ ./tools/create-image.sh ./_output/generic-ubuntu-1804/generic-ubuntu-1804 /dev/nbd9
+total 2.7G
+drwxr-xr-x 2 lzx lzx 4.0K Dec 17 22:18 .
+drwxr-xr-x 5 lzx lzx 4.0K Dec 17 22:11 ..
+-rw-r--r-- 1 lzx lzx 2.2G Dec 17 22:18 generic-ubuntu-1804
+-rw-r--r-- 1 lzx lzx 524M Dec 17 22:19 generic-ubuntu-1804.qcow2
+
+## for onecloud host
+$ ./tools/create-image.sh ./_output/host/hostv3-centos7-base /dev/nbd11
 $ ls -alh ./_output/host
 total 3.8G
 drwxr-xr-x 2 lzx lzx   62 May 15 22:55 .
 drwxr-xr-x 3 lzx lzx   18 May 15 22:36 ..
--rw-r--r-- 1 lzx lzx 2.9G May 15 22:55 host-centos7-base
--rw-r--r-- 1 lzx lzx 934M May 15 22:59 host-centos7-base.qcow2
+-rw-r--r-- 1 lzx lzx 3.1G May 15 22:55 hostv3-centos7-base
+-rw-r--r-- 1 lzx lzx 934M May 15 22:59 hostv3-centos7-base.qcow2
+```
+
+## Upload image to OneCloud
+
+```bash
+# use onecloud climc upload image
+$ climc image-upload --format qcow2 --os-type Linux --os-arch x86_64 \
+    --standard generic-centos-7 ./_output/generic-centos-7/generic-centos-7.qcow2
 ```
 
 ## Connect to building VM

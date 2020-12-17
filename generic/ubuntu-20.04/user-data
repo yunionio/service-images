@@ -1,0 +1,39 @@
+#cloud-config
+autoinstall:
+  version: 1
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+    - arches: [amd64]
+      uri: https://mirrors.aliyun.com/ubuntu/
+  identity:
+    hostname: ubuntu2004
+    username: ubuntu
+    password: '$6$wdAcoXrU039hKYPd$508Qvbe7ObUnxoj15DRCkzC3qO7edjH0VV7BPNRDYK4QR8ofJaEEF2heacn0QgD.f8pO8SNp83XNdWG6tocBM1'
+  ssh:
+    allow-pw: true
+    install-server: true
+  locale: en_US
+  keyboard:
+    layout: gb
+  storage:
+    layout:
+      name: direct
+    config:
+      - type: disk
+        id: disk0
+        match:
+          size: largest
+      - type: partition
+        id: boot-partition
+        device: disk0
+        size: 500M
+      - type: partition
+        id: root-partition
+        device: disk0
+        size: -1
+  late-commands:
+    - "echo 'Defaults:ubuntu !requiretty' > /target/etc/sudoers.d/ubuntu"
+    - "echo 'ubuntu ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/ubuntu"
+    - "chmod 440 /target/etc/sudoers.d/ubuntu"
