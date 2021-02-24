@@ -1,0 +1,91 @@
+{
+    "builders": [{
+        "type": "qemu",
+        "accelerator": "kvm",
+        "qemuargs": [
+        ["-m", "2048M"],
+        ["-smp", "cpus=1,maxcpus=16,cores=4"]
+        ],
+        "disk_interface": "virtio-scsi",
+	"machine_type": "q35",
+        "disk_compression": false,
+        "disk_size": 30720,
+        "format": "qcow2",
+        "net_device": "virtio-net",
+
+        "iso_url": "https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
+        "iso_checksum": "07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
+
+        "vm_name": "host-convert-v34",
+        "output_directory": "./_output/host",
+
+        "headless": true,
+        "vnc_bind_address": "0.0.0.0",
+
+        "http_directory": "./host/http/",
+        "ssh_username": "root",
+        "ssh_password": "123@yunion",
+        "ssh_timeout": "30m",
+
+        "boot_wait": "5s",
+        "boot_command": [
+            "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos7-ks.cfg<enter><wait>"
+        ],
+
+        "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }],
+    "provisioners": [
+    {
+	"type": "shell-local",
+	"command": "echo start local config"
+    },
+    {
+        "type": "shell",
+        "scripts": [
+          "scripts/hostv3/pre-config-v34.sh"
+        ]
+    },
+    {
+	"type": "file",
+	"destination": "/etc/default/grub",
+	"source": "./scripts/hostv3/os-init/rootfs/etc/default/grub"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/docker/daemon.json",
+	"source": "./scripts/hostv3/os-init/rootfs/etc/docker/daemon.json"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/init.d/yunion",
+	"source": "./scripts/hostv3/os-init/rootfs/etc/init.d/yunion"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/modules-load.d/kubernetes.conf",
+	"source": "./scripts/hostv3/os-init/rootfs/etc/modules-load.d/kubernetes.conf"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/sysctl.conf",
+	"source": "./scripts/hostv3/os-init/rootfs/etc/sysctl.conf"
+    },
+    {
+	"type": "file",
+	"destination": "/etc/sysconfig/modules/ipvs.modules",
+	"source": "./scripts/hostv3/os-init/rootfs/etc/sysconfig/modules/ipvs.modules"
+    },
+    {
+        "type": "shell",
+        "scripts": [
+            "scripts/centos/dracut-config.sh",
+            "scripts/centos/grub-config.sh",
+            "scripts/hostv3/install-packages-v34.sh",
+            "scripts/hostv3/gpu-setup.sh",
+            "scripts/hostv3/post-config.sh",
+            "scripts/centos/cleanup.sh",
+            "scripts/common/sync.sh"
+        ]
+    }
+    ]
+}

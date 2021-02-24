@@ -96,13 +96,13 @@ drwxr-xr-x 5 lzx lzx 4.0K Dec 17 22:11 ..
 -rw-r--r-- 1 lzx lzx 524M Dec 17 22:19 generic-ubuntu-1804.qcow2
 
 ## for onecloud host
-$ ./tools/create-image.sh ./_output/host/hostv3-centos7-base /dev/nbd11
+$ ./tools/create-image.sh ./_output/host/host-convert-v34 /dev/nbd11
 $ ls -alh ./_output/host
 total 3.8G
 drwxr-xr-x 2 lzx lzx   62 May 15 22:55 .
 drwxr-xr-x 3 lzx lzx   18 May 15 22:36 ..
--rw-r--r-- 1 lzx lzx 3.1G May 15 22:55 hostv3-centos7-base
--rw-r--r-- 1 lzx lzx 934M May 15 22:59 hostv3-centos7-base.qcow2
+-rw-r--r-- 1 lzx lzx 3.1G May 15 22:55 host-convert-v34
+-rw-r--r-- 1 lzx lzx 934M May 15 22:59 host-convert-v34.qcow2
 ```
 
 ## Upload image to OneCloud

@@ -16,11 +16,11 @@
         "iso_url": "https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
         "iso_checksum": "07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
 
-        "vm_name": "hostv3-centos7-base",
+        "vm_name": "host-convert-v36",
         "output_directory": "./_output/host",
 
-	"headless": true,
-	"vnc_bind_address": "0.0.0.0",
+        "headless": true,
+        "vnc_bind_address": "0.0.0.0",
 
         "http_directory": "./host/http/",
         "ssh_username": "root",
@@ -42,7 +42,7 @@
     {
         "type": "shell",
         "scripts": [
-	    "scripts/hostv3/pre-config.sh"
+          "scripts/hostv3/pre-config-v36.sh"
         ]
     },
     {
@@ -80,9 +80,9 @@
         "scripts": [
             "scripts/centos/dracut-config.sh",
             "scripts/centos/grub-config.sh",
-            "scripts/hostv3/install-packages.sh",
+            "scripts/hostv3/install-packages-v36.sh",
             "scripts/hostv3/gpu-setup.sh",
-	    "scripts/hostv3/post-config.sh",
+            "scripts/hostv3/post-config.sh",
             "scripts/centos/cleanup.sh",
             "scripts/common/sync.sh"
         ]

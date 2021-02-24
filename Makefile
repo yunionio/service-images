@@ -37,8 +37,13 @@ cloudnet:
 	# @echo "ISO_VERSION not define"
 # endif
 
-hostv3:
-	./tools/build-image.sh ./hostv3/centos7.json
+hostv34:
+	./tools/build-image.sh ./hostv3/centos7-v34.json
+
+hostv36:
+	./tools/build-image.sh ./hostv3/centos7-v36.json
+
+hostv3: hostv36
 
 clean-cache:
 	-rm -rf $(CACHE_DIR)
