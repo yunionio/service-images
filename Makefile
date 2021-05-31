@@ -3,30 +3,61 @@ OUTPUT_DIR := $(ROOT_DIR)/_output
 CACHE_DIR := $(ROOT_DIR)/_cache
 CONTRIB_DIR := $(ROOT_DIR)/contrib
 
-# ubuntu-2004:
-	# ./tools/build-image.sh ./generic/ubuntu-2004.json
+BUILD_IMG_CMD = ./tools/build-image.sh
+BUILD_GENERIC_IMG_CMD = $(BUILD_IMG_CMD) $(CURDIR)/generic/$@.json
+CREATE_IMG_CMD = ./tools/create-image.sh
+
+NBD_DEV ?= "/dev/nbd9"
+CREATE_GENERIC_IMG_CMD = $(CREATE_IMG_CMD) $(OUTPUT_DIR)/generic-$^/generic-$^ $(NBD_DEV)
+
+img-%: %
+	$(CREATE_GENERIC_IMG_CMD)
+
+ubuntu-2004:
+	$(BUILD_GENERIC_IMG_CMD)
+
+img-ubuntu-2004: ubuntu-2004
+
+uefi-ubuntu-2004:
+	$(BUILD_GENERIC_IMG_CMD)
+
+img-uefi-ubuntu-2004: uefi-ubuntu-2004
 
 ubuntu-1804:
-	./tools/build-image.sh ./generic/ubuntu-1804.json
+	$(BUILD_GENERIC_IMG_CMD)
 
-centos7:
-	./tools/build-image.sh ./generic/centos7.json
+img-ubuntu-1804: ubuntu-1804
+
+uefi-ubuntu-1804:
+	$(BUILD_GENERIC_IMG_CMD)
+
+img-uefi-ubuntu-1804: uefi-ubuntu-1804
+
+centos-7:
+	$(BUILD_GENERIC_IMG_CMD)
+
+img-centos-7: centos-7
+
+uefi-centos-7:
+	$(BUILD_GENERIC_IMG_CMD)
+
+img-uefi-centos-7: uefi-centos-7
 
 gpu-ubu1804:
-	./tools/build-image.sh ./gpu/ubuntu-1804.json
+	$(BUILD_IMG_CMD) ./gpu/ubuntu-1804.json
 
 gpu-ubu1604:
-	./tools/build-image.sh ./gpu/ubuntu-1604.json
+	$(BUILD_IMG_CMD) ./gpu/ubuntu-1604.json
 
-gpu-centos7:
-	./tools/build-image.sh ./gpu/centos-7.json
+gpu-centos-7:
+	$(BUILD_IMG_CMD) ./gpu/centos-7.json
 
 k8s:
-	./tools/build-image.sh ./kubernetes/k8s-centos7.json
+	$(BUILD_IMG_CMD) ./kubernetes/k8s-centos-7.json
 
 
 cloudnet:
-	./tools/build-image.sh ./cloudnet/centos-7.json
+	$(BUILD_IMG_CMD) ./cloudnet/centos-7.json
 
 # host:
 # ifdef ISO_VERSION
@@ -38,10 +69,10 @@ cloudnet:
 # endif
 
 hostv34:
-	./tools/build-image.sh ./hostv3/centos7-v34.json
+	$(BUILD_IMG_CMD) ./hostv3/centos7-v34.json
 
 hostv36:
-	./tools/build-image.sh ./hostv3/centos7-v36.json
+	$(BUILD_IMG_CMD) ./hostv3/centos7-v36.json
 
 hostv3: hostv36
 

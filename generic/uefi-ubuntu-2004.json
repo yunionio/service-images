@@ -6,6 +6,8 @@
         ["-m", "2048M"],
         ["-smp", "cpus=1,maxcpus=16,cores=4"],
 	      ["-cpu", "host"],
+        ["-bios", "/usr/share/ovmf/x64/OVMF.fd"],
+        ["-vga", "qxl"],
 	      ["-machine", "accel=kvm"]
         ],
         "disk_interface": "virtio",
@@ -20,8 +22,8 @@
 				],
         "iso_checksum": "f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2",
 
-        "vm_name": "generic-ubuntu-2004",
-        "output_directory": "./_output/generic-ubuntu-2004",
+        "vm_name": "generic-uefi-ubuntu-2004",
+        "output_directory": "./_output/generic-uefi-ubuntu-2004",
         "headless": false,
         "vnc_bind_address": "0.0.0.0",
         "http_directory": "./generic/http",
@@ -33,15 +35,14 @@
 
         "boot_wait": "5s",
         "boot_command": [
-					"<esc><wait>",
-					"<esc><wait>",
-					"<enter><wait>",
-					"/install/vmlinuz<wait>",
-					" initrd=/install/initrd.gz",
+					"c<wait>",
+					"linux /install/vmlinuz",
 					" auto-install/enable=true",
 					" debconf/priority=critical",
-					" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
-					" -- <wait>",
+					" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-uefi.cfg<enter><wait>",
+					"initrd /install/initrd.gz",
+					"<enter><wait>",
+          "boot",
 					"<enter><wait>"
         ],
         "shutdown_command": "echo '123@yunion' | sudo -S systemctl poweroff"

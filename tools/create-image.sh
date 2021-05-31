@@ -32,7 +32,8 @@ function nbd_disconnect() {
 
 function img_convert() {
     local img=$1
-    local out_img="$1.qcow2"
+    local time=$(date '+%Y%m%d')
+    local out_img="$1-$time.qcow2"
     echo "Convert $img to $out_img ..."
     qemu-img convert -O qcow2 -c $img $out_img
     echo "Convert finish"
