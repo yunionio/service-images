@@ -1,13 +1,11 @@
-# VERSION=v3.5.0 make build
-# output image: registry.cn-beijing.aliyuncs.com/yunionio/web-base:v3.5.0
-FROM --platform=linux/amd64 centos:7 AS baremetal
-RUN yum install -y wget
-RUN wget -O /tmp/baremetal-pxerom.rpm https://iso.yunion.cn/3.2/rpms/packages/host/baremetal-pxerom-1.1.0-20072810.x86_64.rpm
-RUN yum install -y /tmp/baremetal-pxerom.rpm
+FROM registry.cn-beijing.aliyuncs.com/yunionio/centos-build:1.1-4 AS baremetal
+RUN wget -O /tmp/baremetal-pxerom.rpm https://iso.yunion.cn/vm-images/baremetal-pxerom-1.1.0-21060506.x86_64.rpm
+RUN rpm2cpio /tmp/baremetal-pxerom.rpm | cpio -idmv
+RUN cp -a ./opt/* /opt
 
 FROM --platform=linux/amd64 registry.cn-beijing.aliyuncs.com/yunionio/web-console-fe:v3.5 as web-console
 
-FROM nginx
+FROM nginx:1.21.0
 RUN mkdir -p /opt/cloud/yunion/baremetal/baremetal-prepare
 COPY --from=baremetal /opt/cloud/yunion/baremetal/baremetal-prepare/baremetal_prepare.tar.gz /opt/cloud/yunion/baremetal/baremetal-prepare
 COPY --from=web-console /usr/share/nginx/html/web-console /usr/share/nginx/html/web-console
