@@ -38,8 +38,8 @@ pkgs_host=(
     yunion-ocadm
     yunion-executor
 
-    docker-ce-19.03.9
-    docker-ce-cli-19.03.9
+    docker-ce
+    docker-ce-cli
     containerd.io
 
     bridge-utils
