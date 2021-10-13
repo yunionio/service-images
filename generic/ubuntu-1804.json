@@ -54,7 +54,7 @@
     "provisioners": [{
         "type": "shell",
         "scripts": [
-            "scripts/ubuntu/remove-netplan.sh",
+            "scripts/ubuntu/network-config.sh",
             "scripts/ubuntu/grub-config.sh",
             "scripts/ubuntu/clean-sshkeys.sh",
             "scripts/ubuntu/cleanup.sh",
