@@ -51,7 +51,7 @@
         "type": "shell",
         "execute_command": "echo '123@yunion' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
         "scripts": [
-            "scripts/ubuntu/remove-netplan.sh",
+            "scripts/ubuntu/network-config.sh",
             "scripts/ubuntu/grub-config.sh",
             "scripts/ubuntu/clean-sshkeys.sh",
             "scripts/ubuntu/cleanup.sh",
