@@ -74,7 +74,10 @@ hostv34:
 hostv36:
 	$(BUILD_IMG_CMD) ./hostv3/centos7-v36.json
 
-hostv3: hostv36
+hostv39:
+	$(BUILD_IMG_CMD) ./hostv3/centos7-v39.json
+
+hostv3: hostv39
 
 clean-cache:
 	-rm -rf $(CACHE_DIR)

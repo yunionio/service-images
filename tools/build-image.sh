@@ -10,7 +10,7 @@ PACKER_CONFIG=$(readlink -f $1)
 
 function packer_build() {
     local json_conf=$1
-    packer build -force $json_conf
+    /usr/bin/packer build -force $json_conf
 }
 
 packer_build $PACKER_CONFIG
