@@ -18,7 +18,7 @@
                 ],
                 [
                     "-bios",
-                    "/opt/cloud/contrib/OVMF.fd"
+                    "/usr/share/OVMF/x64/OVMF.fd"
                 ],
                 [
                     "-vga",

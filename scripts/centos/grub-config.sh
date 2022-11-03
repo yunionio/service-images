@@ -10,4 +10,9 @@ GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet intel_iommu=on iommu=pt vfio_iom
 GRUB_DISABLE_RECOVERY="true"
 EOF
 
-grub2-mkconfig -o /boot/grub2/grub.cfg
+if [ -d /sys/firmware/efi ]; then
+    mkdir -p /boot/efi/EFI/centos
+    grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+else
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+fi
