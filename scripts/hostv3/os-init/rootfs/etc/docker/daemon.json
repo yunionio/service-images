@@ -9,6 +9,5 @@
   "log-opts": {
       "max-size": "100m"
    },
-  "registry-mirrors": ["https://lje6zxpk.mirror.aliyuncs.com"],
   "live-restore": true
 }

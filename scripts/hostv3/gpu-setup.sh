@@ -140,7 +140,13 @@ grub_setup() {
     # 以便解决重启后因未加载 lvm 驱动而卡住的问题
     sed -i -e 's#rd.lvm.lv=[^ ]*##gi' $grub_cfg
 
-    grub2-mkconfig -o /boot/grub2/grub.cfg
+
+    if [ -d /sys/firmware/efi ]; then
+        mkdir -p /boot/efi/EFI/centos
+        grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+    else
+        grub2-mkconfig -o /boot/grub2/grub.cfg
+    fi
 }
 
 vfio_override_script_setup() {

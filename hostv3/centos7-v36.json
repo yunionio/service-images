@@ -7,7 +7,7 @@
         ["-smp", "cpus=1,maxcpus=16,cores=4"]
         ],
         "disk_interface": "virtio-scsi",
-	"machine_type": "q35",
+	"machine_type": "pc",
         "disk_compression": false,
         "disk_size": 30720,
         "format": "qcow2",
