@@ -74,6 +74,7 @@ pkgs_host=(
     wget
     usbredir
     yunion-qemu-4.2.0
+    yunion-ovmfrpm
     htop
     yunion-ocadm
     yunion-executor
