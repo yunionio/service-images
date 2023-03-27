@@ -14,15 +14,12 @@
         "format": "qcow2",
         "net_device": "virtio-net",
 
-				"iso_urls": [
-					"iso/ubuntu-20.04.1-legacy-server-amd64.iso",
-					"http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-amd64.iso"
-				],
+				"iso_url": "https://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-amd64.iso",
         "iso_checksum": "f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2",
 
         "vm_name": "generic-ubuntu-2004",
         "output_directory": "./_output/generic-ubuntu-2004",
-        "headless": false,
+        "headless": true,
         "vnc_bind_address": "0.0.0.0",
         "http_directory": "./generic/http",
         "ssh_username": "root",
@@ -51,6 +48,7 @@
         "execute_command": "echo '123@yunion' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
         "scripts": [
             "scripts/ubuntu/network-config.sh",
+            "scripts/ubuntu/dracut-config.sh",
             "scripts/ubuntu/grub-config.sh",
             "scripts/ubuntu/clean-sshkeys.sh",
             "scripts/ubuntu/cleanup.sh",
