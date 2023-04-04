@@ -4,43 +4,26 @@
             "type": "qemu",
             "accelerator": "kvm",
             "qemuargs": [
-                [
-                    "-m",
-                    "2048M"
-                ],
-                [
-                    "-smp",
-                    "cpus=1,maxcpus=16,cores=4"
-                ],
-                [
-                    "-cpu",
-                    "host"
-                ],
-                [
-                    "-bios",
-                    "/usr/share/OVMF/x64/OVMF.fd"
-                ],
-                [
-                    "-vga",
-                    "qxl"
-                ],
-                [
-                    "-machine",
-                    "accel=kvm"
-                ]
+                ["-m", "2048M"],
+                ["-smp", "cpus=1,maxcpus=16,cores=4"],
+                ["-cpu", "host"],
+                ["-vga", "virtio"],
+                ["-bios", "/usr/share/OVMF/x64/OVMF.fd"]
             ],
-            "disk_interface": "virtio-scsi",
+            "disk_interface": "ide",
             "disk_compression": false,
             "disk_size": 30720,
             "format": "qcow2",
-            "net_device": "virtio-net",
+            "net_device": "e1000",
             "iso_url": "https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
             "iso_checksum": "07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
             "vm_name": "host-convert-uefi-v39",
             "output_directory": "./_output/host",
             "headless": true,
             "vnc_bind_address": "0.0.0.0",
-            "http_directory": "./generic/http/",
+            "vnc_port_min": 5901,
+            "vnc_port_max": 5901,
+            "http_directory": "./host/http/",
             "ssh_username": "root",
             "ssh_password": "123@yunion",
             "ssh_timeout": "30m",

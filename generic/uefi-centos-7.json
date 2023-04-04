@@ -6,15 +6,15 @@
         ["-m", "2048M"],
         ["-smp", "cpus=1,maxcpus=16,cores=4"],
 	      ["-cpu", "host"],
-        ["-bios", "/usr/share/ovmf/x64/OVMF.fd"],
+        ["-bios", "/usr/share/ovmf/x64/OVMF_CODE.fd"],
         ["-vga", "qxl"],
 	      ["-machine", "accel=kvm"]
         ],
-        "disk_interface": "virtio-scsi",
+        "disk_interface": "ide",
         "disk_compression": false,
         "disk_size": 30720,
         "format": "qcow2",
-        "net_device": "virtio-net",
+        "net_device": "e1000",
 
         "iso_url": "https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
         "iso_checksum": "07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
@@ -22,8 +22,10 @@
         "vm_name": "generic-uefi-centos-7",
         "output_directory": "./_output/generic-uefi-centos-7",
 
-        "headless": false,
+        "headless": true,
         "vnc_bind_address": "0.0.0.0",
+        "vnc_port_min": 5900,
+        "vnc_port_max": 5900,
 
         "http_directory": "./generic/http/",
         "ssh_username": "root",
