@@ -25,6 +25,8 @@
             "output_directory": "./_output/host",
             "headless": true,
             "vnc_bind_address": "0.0.0.0",
+            "vnc_port_min": 5902,
+            "vnc_port_max": 5902,
             "http_directory": "./host/http/",
             "ssh_username": "root",
             "ssh_password": "123@yunion",
