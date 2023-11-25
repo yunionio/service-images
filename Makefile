@@ -43,6 +43,17 @@ uefi-centos-7:
 
 img-uefi-centos-7: uefi-centos-7
 
+gpu-ubu2004:
+	$(BUILD_IMG_CMD) ./gpu/ubuntu-2004.json
+	./tools/create-image.sh _output/gpu-ubuntu2004/gpu-ubuntu2004-base /dev/nbd10
+
+# compatible for QEMU emulator version 8.1.3
+# by `brew install qemu`
+gpu-ubu2004-mac:
+	perl -i.bak -pe 's#kvm#hvf#g' ./gpu/ubuntu-2004.json
+	$(BUILD_IMG_CMD) ./gpu/ubuntu-2004.json
+	mv -f ./gpu/ubuntu-2004.json.bak ./gpu/ubuntu-2004.json
+
 gpu-ubu1804:
 	$(BUILD_IMG_CMD) ./gpu/ubuntu-1804.json
 
