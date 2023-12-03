@@ -1,0 +1,61 @@
+{
+    "builders": [{
+        "type": "qemu",
+        "accelerator": "hvf",
+        "qemuargs": [
+        ["-m", "2048M"],
+        ["-smp", "cpus=1,maxcpus=16,cores=4"],
+	["-cpu", "host"],
+	["-machine", "accel=hvf"]
+        ],
+        "disk_interface": "virtio",
+        "disk_compression": false,
+        "disk_size": 51200,
+        "format": "qcow2",
+        "net_device": "virtio-net",
+        "iso_url": "https://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-amd64.iso",
+        "iso_checksum": "f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2",
+        "iso_checksum_type": "sha256",
+
+        "vm_name": "gpu-ubuntu2004-base",
+        "output_directory": "./_output/gpu-ubuntu2004",
+
+	"headless": true,
+	"vnc_bind_address": "0.0.0.0",
+
+        "http_directory": "./gpu/http/",
+        "ssh_username": "root",
+        "ssh_password": "123@yunion",
+        "ssh_timeout": "30m",
+
+        "boot_wait": "10s",
+        "boot_command": [
+
+					"<esc><wait>",
+					"<esc><wait>",
+					"<enter><wait>",
+					"/install/vmlinuz<wait>",
+					" initrd=/install/initrd.gz",
+					" auto-install/enable=true",
+					" debconf/priority=critical",
+					" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+					" -- <wait>",
+					"<enter><wait>"
+
+],
+
+        "shutdown_command": "echo 'packer' | sudo -S systemctl poweroff"
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "scripts": [
+            "scripts/ubuntu/install-nvidia-drivers-2004.sh",
+            "scripts/ubuntu/network-config.sh",
+            "scripts/ubuntu/grub-config.sh",
+            "scripts/ubuntu/clean-sshkeys.sh",
+            "scripts/ubuntu/cleanup.sh",
+            "scripts/common/sync.sh"
+        ]
+    }]
+}
+
