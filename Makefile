@@ -5,6 +5,7 @@ CONTRIB_DIR := $(ROOT_DIR)/contrib
 
 BUILD_IMG_CMD = ./tools/build-image.sh
 BUILD_GENERIC_IMG_CMD = $(BUILD_IMG_CMD) $(CURDIR)/generic/$@.json
+BUILD_BM_IMG_CMD = $(BUILD_IMG_CMD) $(CURDIR)/baremetal/$@/$@.json
 CREATE_IMG_CMD = ./tools/create-image.sh
 
 NBD_DEV ?= "/dev/nbd9"
@@ -12,6 +13,9 @@ CREATE_GENERIC_IMG_CMD = $(CREATE_IMG_CMD) $(OUTPUT_DIR)/generic-$^/generic-$^ $
 
 img-%: %
 	$(CREATE_GENERIC_IMG_CMD)
+
+bm-ubuntu-2204:
+	$(BUILD_BM_IMG_CMD)
 
 ubuntu-2004:
 	$(BUILD_GENERIC_IMG_CMD)
